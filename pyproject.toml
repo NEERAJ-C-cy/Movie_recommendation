@@ -1,7 +1,0 @@
-[project]
-name = "movie-recommendation"
-version = "0.1.0"
-description = "CineMatch - Movie Recommendation System"
-readme = "README.md"
-requires-python = ">=3.13"
-dependencies = []
