@@ -2,6 +2,8 @@ import html
  
 import requests
 import streamlit as st
+
+
  
 # =============================
 # CONFIG
@@ -9,16 +11,31 @@ import streamlit as st
 API_BASE = "https://movie-recommendation-1-aey1.onrender.com" or "http://127.0.0.1:8000"
 TMDB_IMG = "https://image.tmdb.org/t/p/w500"
  
+import streamlit as st
+
 st.set_page_config(
     page_title="CineMatch • Movie Recommender",
     page_icon="🎬",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+st.markdown(
+    """
+    <style>
+    :root {
+        color-scheme: dark;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
  
 # =============================
 # STYLES (dark cinematic theme)
 # =============================
+
+
 st.markdown(
     """
 <style>
@@ -104,75 +121,94 @@ div[data-baseweb="input"] > div:focus-within, div[data-baseweb="select"] > div:f
     box-shadow: 0 0 0 3px rgba(255,77,109,0.18) !important;
 }
  
-/* Selectbox: make every inner layer dark with readable text */
-div[data-baseweb="select"] *,
-div[data-testid="stSelectbox"] div[data-baseweb="select"] div {
-    background-color: transparent !important;
-    color: #f1f3fa !important;
-    -webkit-text-fill-color: #f1f3fa !important;
+/* ---------- SELECTBOX - DARK CINEMATIC FIX ---------- */
+
+:root,
+.stApp {
+    color-scheme: dark;
 }
-div[data-baseweb="select"] > div { background-color: var(--bg-soft) !important; }
-div[data-baseweb="select"] svg { fill: var(--muted) !important; }
-div[data-baseweb="select"] input { color: #f1f3fa !important; }
- 
-/* Dropdown popup list */
-div[data-baseweb="popover"], div[data-baseweb="popover"] > div {
-    background-color: var(--bg-soft) !important;
-    border-radius: 14px !important;
-}
-ul[role="listbox"], div[data-baseweb="menu"] {
-    background-color: var(--bg-soft) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 14px !important;
-}
-li[role="option"] {
-    background-color: transparent !important;
-    color: #f1f3fa !important;
-}
-li[role="option"] * { color: #f1f3fa !important; background: transparent !important; }
-li[role="option"]:hover, li[aria-selected="true"] {
-    background: linear-gradient(90deg, rgba(255,77,109,0.30), rgba(124,92,255,0.30)) !important;
-}
- 
-/* Slider value text */
-div[data-testid="stSliderThumbValue"], div[data-testid="stTickBarMin"], div[data-testid="stTickBarMax"] {
-    color: #f1f3fa !important;
-}
-input { color: var(--text) !important; font-size: 1rem !important; }
-.stTextInput label p, .stSelectbox label p, .stSlider label p { color: var(--muted) !important; font-weight: 500; }
- 
-/* ---------- FORCE DARK SELECTBOX (all layers, high specificity) ---------- */
-:root, .stApp, section[data-testid="stSidebar"] { color-scheme: dark; }
- 
-section[data-testid="stSidebar"] [data-testid="stSelectbox"] [data-baseweb="select"],
-section[data-testid="stSidebar"] [data-testid="stSelectbox"] [data-baseweb="select"] > div,
-section[data-testid="stSidebar"] [data-testid="stSelectbox"] [data-baseweb="select"] > div > div,
-section[data-testid="stSidebar"] [data-testid="stSelectbox"] [data-baseweb="select"] div,
-[data-testid="stSelectbox"] [data-baseweb="select"],
-[data-testid="stSelectbox"] [data-baseweb="select"] > div,
-[data-testid="stSelectbox"] [data-baseweb="select"] > div > div,
-[data-testid="stSelectbox"] [data-baseweb="select"] div {
-    background: #131622 !important;
+
+/* Main selectbox container */
+div[data-testid="stSelectbox"] div[data-baseweb="select"] {
     background-color: #131622 !important;
+    border-radius: 14px !important;
     color: #f1f3fa !important;
-    -webkit-text-fill-color: #f1f3fa !important;
-    opacity: 1 !important;
 }
-[data-testid="stSelectbox"] [data-baseweb="select"] > div {
+
+/* Actual visible selectbox */
+div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+    background-color: #131622 !important;
+    background: #131622 !important;
     border: 1px solid rgba(255,255,255,0.15) !important;
     border-radius: 14px !important;
+    color: #f1f3fa !important;
+    box-shadow: none !important;
 }
-[data-testid="stSelectbox"] [data-baseweb="select"] span,
-[data-testid="stSelectbox"] [data-baseweb="select"] p,
-[data-testid="stSelectbox"] [data-baseweb="select"] input,
-[data-testid="stSelectbox"] [data-baseweb="select"] [class*="placeholder"],
-[data-testid="stSelectbox"] [data-baseweb="select"] [class*="singleValue"] {
+
+/* Text inside selectbox */
+div[data-testid="stSelectbox"] div[data-baseweb="select"] span,
+div[data-testid="stSelectbox"] div[data-baseweb="select"] p,
+div[data-testid="stSelectbox"] div[data-baseweb="select"] input,
+div[data-testid="stSelectbox"] div[data-baseweb="select"] [class*="singleValue"],
+div[data-testid="stSelectbox"] div[data-baseweb="select"] [class*="placeholder"] {
     color: #f1f3fa !important;
     -webkit-text-fill-color: #f1f3fa !important;
-    opacity: 1 !important;
     background: transparent !important;
+    opacity: 1 !important;
 }
-[data-testid="stSelectbox"] [data-baseweb="select"] svg { fill: #9aa0b4 !important; color: #9aa0b4 !important; }
+
+/* Dropdown arrow */
+div[data-testid="stSelectbox"] div[data-baseweb="select"] svg {
+    fill: #9aa0b4 !important;
+    color: #9aa0b4 !important;
+}
+
+/* Focus */
+div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:focus-within {
+    border-color: #ff4d6d !important;
+    box-shadow: 0 0 0 3px rgba(255,77,109,0.18) !important;
+}
+
+/* ---------- DROPDOWN MENU ---------- */
+
+div[data-baseweb="popover"] {
+    background: #131622 !important;
+    border-radius: 14px !important;
+}
+
+div[data-baseweb="popover"] > div {
+    background: #131622 !important;
+    border-radius: 14px !important;
+}
+
+ul[role="listbox"],
+div[data-baseweb="menu"] {
+    background: #131622 !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+    border-radius: 14px !important;
+}
+
+/* Dropdown options */
+li[role="option"] {
+    background: #131622 !important;
+    color: #f1f3fa !important;
+}
+
+li[role="option"] * {
+    background: transparent !important;
+    color: #f1f3fa !important;
+    -webkit-text-fill-color: #f1f3fa !important;
+}
+
+/* Hover / selected option */
+li[role="option"]:hover,
+li[role="option"][aria-selected="true"] {
+    background: linear-gradient(
+        90deg,
+        rgba(255,77,109,0.30),
+        rgba(124,92,255,0.30)
+    ) !important;
+}
  
 /* ---------- Buttons ---------- */
 .stButton > button {
@@ -261,6 +297,64 @@ div[data-testid="stAlert"] { border-radius: 14px; border: 1px solid var(--border
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-thumb { background: #2a2f45; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+
+/* =========================================
+   FIX: STREAMLIT SELECTBOX DROPDOWN
+   ========================================= */
+
+/* Selectbox itself */
+[data-testid="stSelectbox"] [data-baseweb="select"] {
+    background: #131622 !important;
+    color: #f1f3fa !important;
+}
+
+[data-testid="stSelectbox"] [data-baseweb="select"] > div {
+    background: #131622 !important;
+    color: #f1f3fa !important;
+}
+
+/* Dropdown popup - IMPORTANT */
+body div[data-baseweb="popover"] {
+    background: #131622 !important;
+}
+
+body div[data-baseweb="popover"] > div {
+    background: #131622 !important;
+}
+
+body div[data-baseweb="popover"] [role="listbox"] {
+    background: #131622 !important;
+    color: #f1f3fa !important;
+}
+
+/* Every dropdown option */
+body div[data-baseweb="popover"] [role="option"] {
+    background: #131622 !important;
+    color: #f1f3fa !important;
+}
+
+/* Text inside options */
+body div[data-baseweb="popover"] [role="option"] * {
+    background: transparent !important;
+    color: #f1f3fa !important;
+    -webkit-text-fill-color: #f1f3fa !important;
+}
+
+/* Hover */
+body div[data-baseweb="popover"] [role="option"]:hover {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 77, 109, 0.30),
+        rgba(124, 92, 255, 0.30)
+    ) !important;
+}
+
+/* Selected option */
+body div[data-baseweb="popover"] [role="option"][aria-selected="true"] {
+    background: rgba(255, 77, 109, 0.20) !important;
+    color: #ffffff !important;
+}
 </style>
 """,
     unsafe_allow_html=True,
