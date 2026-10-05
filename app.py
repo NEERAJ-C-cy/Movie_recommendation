@@ -8,11 +8,9 @@ import streamlit as st
 # =============================
 # CONFIG
 # =============================
-API_BASE = "https://movie-recommendation-1-aey1.onrender.com" or "http://127.0.0.1:8000"
+API_BASE = "https://movie-recommendation-1-aey1.onrender.com"
 TMDB_IMG = "https://image.tmdb.org/t/p/w500"
  
-import streamlit as st
-
 st.set_page_config(
     page_title="CineMatch • Movie Recommender",
     page_icon="🎬",
@@ -70,10 +68,32 @@ hr { border-color: var(--border) !important; }
  
 /* ---------- Sidebar ---------- */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #10131f 0%, #0b0d14 100%);
-    border-right: 1px solid var(--border);
+    background:
+        radial-gradient(500px 260px at 50% -5%, rgba(124,92,255,0.08), transparent 65%),
+        linear-gradient(180deg, #10131f 0%, #0b0d14 100%);
+    border-right: 1px solid rgba(255,255,255,0.07);
 }
 section[data-testid="stSidebar"] * { color: var(--text); }
+
+section[data-testid="stSidebar"] .block-container {
+    padding: 2rem 1.05rem 2rem 1.05rem !important;
+}
+
+section[data-testid="stSidebar"] hr {
+    margin: 1.25rem 0 !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+section[data-testid="stSidebar"] .stMarkdown h2 {
+    font-size: 1.05rem !important;
+    margin-bottom: 0.15rem !important;
+}
+
+section[data-testid="stSidebar"] .stMarkdown h3 {
+    font-size: 0.95rem !important;
+    margin-top: 0.35rem !important;
+    margin-bottom: 0.55rem !important;
+}
  
 /* ---------- Hero ---------- */
 .hero {
@@ -121,95 +141,155 @@ div[data-baseweb="input"] > div:focus-within, div[data-baseweb="select"] > div:f
     box-shadow: 0 0 0 3px rgba(255,77,109,0.18) !important;
 }
  
-/* ---------- SELECTBOX - DARK CINEMATIC FIX ---------- */
+/* ---------- SELECTBOX - DARK CINEMATIC THEME ---------- */
 
-:root,
-.stApp {
-    color-scheme: dark;
+/*
+   Streamlit 1.64+ selectbox:
+   - removes the unwanted white outer wrapper
+   - keeps the complete control dark
+   - gives the control a clean cinematic look
+*/
+
+/* Selectbox widget wrapper */
+[data-testid="stSelectbox"] {
+    width: 100% !important;
 }
 
-/* Main selectbox container */
-div[data-testid="stSelectbox"] div[data-baseweb="select"] {
-    background-color: #131622 !important;
-    border-radius: 14px !important;
-    color: #f1f3fa !important;
-}
-
-/* Actual visible selectbox */
-div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
-    background-color: #131622 !important;
+/* Remove default/light backgrounds from every structural layer */
+[data-testid="stSelectbox"] > div,
+[data-testid="stSelectbox"] > div > div,
+[data-testid="stSelectbox"] [role="combobox"],
+[data-testid="stSelectbox"] [role="combobox"] > div {
     background: #131622 !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
-    border-radius: 14px !important;
-    color: #f1f3fa !important;
-    box-shadow: none !important;
+    background-color: #131622 !important;
 }
 
-/* Text inside selectbox */
-div[data-testid="stSelectbox"] div[data-baseweb="select"] span,
-div[data-testid="stSelectbox"] div[data-baseweb="select"] p,
-div[data-testid="stSelectbox"] div[data-baseweb="select"] input,
-div[data-testid="stSelectbox"] div[data-baseweb="select"] [class*="singleValue"],
-div[data-testid="stSelectbox"] div[data-baseweb="select"] [class*="placeholder"] {
+/* Main visible control */
+[data-testid="stSelectbox"] [role="combobox"] {
+    min-height: 42px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border: 1px solid rgba(255,255,255,0.14) !important;
+    border-radius: 12px !important;
+    color: #f1f3fa !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02),
+                0 4px 16px rgba(0,0,0,0.18) !important;
+    transition: border-color .2s ease, box-shadow .2s ease,
+                transform .2s ease !important;
+}
+
+/* Selected text */
+[data-testid="stSelectbox"] [role="combobox"],
+[data-testid="stSelectbox"] [role="combobox"] *,
+[data-testid="stSelectbox"] [role="combobox"] span,
+[data-testid="stSelectbox"] [role="combobox"] p {
     color: #f1f3fa !important;
     -webkit-text-fill-color: #f1f3fa !important;
-    background: transparent !important;
-    opacity: 1 !important;
 }
 
-/* Dropdown arrow */
-div[data-testid="stSelectbox"] div[data-baseweb="select"] svg {
-    fill: #9aa0b4 !important;
-    color: #9aa0b4 !important;
+/* Make the text vertically centered */
+[data-testid="stSelectbox"] [role="combobox"] > div {
+    background: transparent !important;
+    color: #f1f3fa !important;
+}
+
+/* Arrow area */
+[data-testid="stSelectbox"] [role="combobox"] svg {
+    color: #a8aec0 !important;
+    fill: #a8aec0 !important;
+}
+
+/* Hover */
+[data-testid="stSelectbox"] [role="combobox"]:hover {
+    border-color: rgba(255,77,109,0.55) !important;
+    box-shadow: 0 0 0 2px rgba(255,77,109,0.08),
+                0 6px 18px rgba(0,0,0,0.22) !important;
 }
 
 /* Focus */
-div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:focus-within {
+[data-testid="stSelectbox"] [role="combobox"]:focus,
+[data-testid="stSelectbox"] [role="combobox"]:focus-within {
     border-color: #ff4d6d !important;
-    box-shadow: 0 0 0 3px rgba(255,77,109,0.18) !important;
+    box-shadow: 0 0 0 3px rgba(255,77,109,0.16),
+                0 8px 22px rgba(0,0,0,0.24) !important;
+    outline: none !important;
 }
 
-/* ---------- DROPDOWN MENU ---------- */
-
-div[data-baseweb="popover"] {
+/* Streamlit virtual dropdown */
+[data-testid="stSelectboxVirtualDropdown"] {
     background: #131622 !important;
-    border-radius: 14px !important;
+    background-color: #131622 !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.55) !important;
+    overflow: hidden !important;
 }
 
-div[data-baseweb="popover"] > div {
+/* Dropdown list */
+[data-testid="stSelectboxVirtualDropdown"] [role="listbox"] {
     background: #131622 !important;
-    border-radius: 14px !important;
+    background-color: #131622 !important;
+    padding: 5px !important;
 }
 
-ul[role="listbox"],
-div[data-baseweb="menu"] {
-    background: #131622 !important;
-    border: 1px solid rgba(255,255,255,0.10) !important;
-    border-radius: 14px !important;
-}
-
-/* Dropdown options */
-li[role="option"] {
+/* Options */
+[data-testid="stSelectboxVirtualDropdown"] [role="option"] {
     background: #131622 !important;
     color: #f1f3fa !important;
+    border-radius: 8px !important;
+    min-height: 40px !important;
+    margin: 2px 0 !important;
 }
 
-li[role="option"] * {
+/* Option text */
+[data-testid="stSelectboxVirtualDropdown"] [role="option"] *,
+[data-testid="stSelectboxVirtualDropdown"] [role="option"] span,
+[data-testid="stSelectboxVirtualDropdown"] [role="option"] p {
     background: transparent !important;
     color: #f1f3fa !important;
     -webkit-text-fill-color: #f1f3fa !important;
 }
 
-/* Hover / selected option */
-li[role="option"]:hover,
-li[role="option"][aria-selected="true"] {
+/* Option hover */
+[data-testid="stSelectboxVirtualDropdown"] [role="option"]:hover {
     background: linear-gradient(
         90deg,
-        rgba(255,77,109,0.30),
-        rgba(124,92,255,0.30)
+        rgba(255,77,109,0.26),
+        rgba(124,92,255,0.26)
     ) !important;
 }
- 
+
+/* Selected option */
+[data-testid="stSelectboxVirtualDropdown"]
+[role="option"][aria-selected="true"] {
+    background: linear-gradient(
+        90deg,
+        rgba(255,77,109,0.22),
+        rgba(124,92,255,0.18)
+    ) !important;
+    color: #ffffff !important;
+}
+
+/* Prevent browser native light form styling */
+[data-testid="stSelectbox"] select,
+[data-testid="stSelectbox"] input {
+    color-scheme: dark !important;
+    background: #131622 !important;
+    color: #f1f3fa !important;
+    -webkit-text-fill-color: #f1f3fa !important;
+}
+
+
+/* ---------- Sidebar slider ---------- */
+section[data-testid="stSidebar"] [data-testid="stSlider"] {
+    padding-top: 0.15rem !important;
+}
+
+section[data-testid="stSidebar"] [data-testid="stSlider"] [role="slider"] {
+    background: #ff4d6d !important;
+    border-color: #ff4d6d !important;
+}
+
 /* ---------- Buttons ---------- */
 .stButton > button {
     width: 100%;
@@ -299,62 +379,6 @@ div[data-testid="stAlert"] { border-radius: 14px; border: 1px solid var(--border
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 
-/* =========================================
-   FIX: STREAMLIT SELECTBOX DROPDOWN
-   ========================================= */
-
-/* Selectbox itself */
-[data-testid="stSelectbox"] [data-baseweb="select"] {
-    background: #131622 !important;
-    color: #f1f3fa !important;
-}
-
-[data-testid="stSelectbox"] [data-baseweb="select"] > div {
-    background: #131622 !important;
-    color: #f1f3fa !important;
-}
-
-/* Dropdown popup - IMPORTANT */
-body div[data-baseweb="popover"] {
-    background: #131622 !important;
-}
-
-body div[data-baseweb="popover"] > div {
-    background: #131622 !important;
-}
-
-body div[data-baseweb="popover"] [role="listbox"] {
-    background: #131622 !important;
-    color: #f1f3fa !important;
-}
-
-/* Every dropdown option */
-body div[data-baseweb="popover"] [role="option"] {
-    background: #131622 !important;
-    color: #f1f3fa !important;
-}
-
-/* Text inside options */
-body div[data-baseweb="popover"] [role="option"] * {
-    background: transparent !important;
-    color: #f1f3fa !important;
-    -webkit-text-fill-color: #f1f3fa !important;
-}
-
-/* Hover */
-body div[data-baseweb="popover"] [role="option"]:hover {
-    background: linear-gradient(
-        90deg,
-        rgba(255, 77, 109, 0.30),
-        rgba(124, 92, 255, 0.30)
-    ) !important;
-}
-
-/* Selected option */
-body div[data-baseweb="popover"] [role="option"][aria-selected="true"] {
-    background: rgba(255, 77, 109, 0.20) !important;
-    color: #ffffff !important;
-}
 </style>
 """,
     unsafe_allow_html=True,
@@ -582,6 +606,7 @@ with st.sidebar:
         list(CATEGORY_LABELS.keys()),
         index=0,
         format_func=lambda k: CATEGORY_LABELS[k],
+        key="home_category",
     )
     grid_cols = st.slider("Grid columns", 4, 8, 6)
  
@@ -631,7 +656,12 @@ if st.session_state.view == "home":
                 # Dropdown
                 if suggestions:
                     labels = ["-- Select a movie --"] + [s[0] for s in suggestions]
-                    selected = st.selectbox("✨ Suggestions", labels, index=0)
+                    selected = st.selectbox(
+                        "✨ Suggestions",
+                        labels,
+                        index=0,
+                        key="movie_suggestions",
+                    )
  
                     if selected != "-- Select a movie --":
                         # map label -> id
